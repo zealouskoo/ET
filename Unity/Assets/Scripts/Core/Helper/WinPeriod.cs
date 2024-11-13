@@ -2,6 +2,9 @@
 
 namespace ET
 {
+    /// <summary>
+    /// 设置 Windows 平台的精度值
+    /// </summary>
     public static class WinPeriod
     {
         // 一般默认的精度不止1毫秒（不同操作系统有所不同），需要调用timeBeginPeriod与timeEndPeriod来设置精度

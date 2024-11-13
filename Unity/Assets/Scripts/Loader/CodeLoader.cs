@@ -21,10 +21,15 @@ namespace ET
             this.enableDll = Resources.Load<GlobalConfig>("GlobalConfig").EnableDll;
         }
 
+        /// <summary>
+        /// 异步下载方法
+        /// </summary>
         public async ETTask DownloadAsync()
         {
+            //不处于 Editor 模式下
             if (!Define.IsEditor)
             {
+                //使用ResourceComponent的异步方法 LoadAllAssetsAsync 
                 this.dlls = await ResourcesComponent.Instance.LoadAllAssetsAsync<TextAsset>($"Assets/Bundles/Code/Unity.Model.dll.bytes");
                 this.aotDlls = await ResourcesComponent.Instance.LoadAllAssetsAsync<TextAsset>($"Assets/Bundles/AotDlls/mscorlib.dll.bytes");
             }
@@ -32,6 +37,7 @@ namespace ET
 
         public void Start()
         {
+            //不处于 Editor 模式下
             if (!Define.IsEditor)
             {
                 byte[] modelAssBytes = this.dlls["Unity.Model.dll"].bytes;
@@ -44,6 +50,7 @@ namespace ET
                 //modelViewAssBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Unity.ModelView.dll.bytes"));
                 //modelViewPdbBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Unity.ModelView.pdb.bytes"));
 
+                // 使用 IL2CPP
                 if (Define.EnableIL2CPP)
                 {
                     foreach (var kv in this.aotDlls)
@@ -57,6 +64,7 @@ namespace ET
             }
             else
             {
+                // 启用了 Dll 模式
                 if (this.enableDll)
                 {
                     byte[] modelAssBytes = File.ReadAllBytes(Path.Combine(Define.CodeDir, "Unity.Model.dll.bytes"));
@@ -91,16 +99,24 @@ namespace ET
             
             (Assembly hotfixAssembly, Assembly hotfixViewAssembly) = this.LoadHotfix();
 
+            // 添加单例 CodeTypes，并有一个类型为 程序集数组 的参数
             World.Instance.AddSingleton<CodeTypes, Assembly[]>(new[]
             {
+                // World 程序集，Init 程序集， model 程序集， modelView 程序集， hotfix 程序集， hotfixView 程序集
+                // 程序会分析这些程序集并将其中定义好的泛型类放入 CodeTypes 中
                 typeof (World).Assembly, typeof (Init).Assembly, this.modelAssembly, this.modelViewAssembly, hotfixAssembly,
                 hotfixViewAssembly
             });
 
+            // 用反射的方式调用 model 程序集内 ET.Entry 类中的 Start 方法
             IStaticMethod start = new StaticMethod(this.modelAssembly, "ET.Entry", "Start");
             start.Run();
         }
 
+        /// <summary>
+        /// 读取热更新 hotfix 和 hotfixView
+        /// </summary>
+        /// <returns>热更新 hotfix 和 hotfixView 的程序集</returns>
         private (Assembly, Assembly) LoadHotfix()
         {
             byte[] hotfixAssBytes;

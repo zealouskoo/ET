@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    //一个单例模式的类
     public class World: IDisposable
     {
         [StaticField]
@@ -47,6 +48,7 @@ namespace ET
             }
         }
 
+        //创建单例类
         public T AddSingleton<T>() where T : ASingleton, ISingletonAwake, new()
         {
             T singleton = new();

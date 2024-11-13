@@ -143,7 +143,7 @@ namespace ET
         }
 
         /// <summary>
-        /// 主要用来加载dll config aotdll，因为这时候纤程还没创建，无法使用ResourcesLoaderComponent。
+        /// 主要用来加载 Dll config AotDll；因为这时候纤程还没创建，无法使用 ResourcesLoaderComponent。
         /// 游戏中的资源应该使用ResourcesLoaderComponent来加载
         /// </summary>
         public async ETTask<Dictionary<string, T>> LoadAllAssetsAsync<T>(string location) where T : UnityEngine.Object

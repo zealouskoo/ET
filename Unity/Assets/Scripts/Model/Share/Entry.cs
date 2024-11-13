@@ -18,11 +18,13 @@ namespace ET
     
     public static class Entry
     {
+        //空函数，为了初始化静态类
         public static void Init()
         {
             
         }
         
+        // 游戏客户端和服务器端共同的一个程序入口
         public static void Start()
         {
             StartAsync().Coroutine();
@@ -49,6 +51,7 @@ namespace ET
             
             await World.Instance.AddSingleton<ConfigLoader>().LoadAsync();
 
+            // 用于创建管理 Fiber
             await FiberManager.Instance.Create(SchedulerType.Main, ConstFiberId.Main, 0, SceneType.Main, "");
         }
     }

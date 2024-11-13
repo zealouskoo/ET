@@ -53,11 +53,17 @@ namespace ET
         
         public void CreateCode()
         {
+            // 收集有标识为 CodeAttribute 属性标签的类的泛型类型
+            // 无法直接显式的进行挂载的原因是这些类都会进行热重载
             var hashSet = this.GetTypes(typeof (CodeAttribute));
+            // 通过类型进行遍历
             foreach (Type type in hashSet)
             {
+                // 通过其类型来创建出各自的实例
                 object obj = Activator.CreateInstance(type);
+                // 调用各自的 Awake 函数
                 ((ISingletonAwake)obj).Awake();
+                // 最终还是通过 World 的 AddSingleton 来添加这些静态类
                 World.Instance.AddSingleton((ASingleton)obj);
             }
         }

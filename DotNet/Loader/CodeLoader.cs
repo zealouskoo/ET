@@ -12,6 +12,7 @@ namespace ET
 
         private Assembly assembly;
 
+        // 单例创建好后自动执行的一个函数
         public void Awake()
         {
             Assembly[] assemblies = AppDomain.CurrentDomain.GetAssemblies();
