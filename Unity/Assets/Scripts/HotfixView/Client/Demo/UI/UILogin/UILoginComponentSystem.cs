@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 namespace ET.Client
 {
+	/// <summary>
+	/// 登录面板的 UI 逻辑
+	/// </summary>
 	[EntitySystemOf(typeof(UILoginComponent))]
 	[FriendOf(typeof(UILoginComponent))]
 	public static partial class UILoginComponentSystem

@@ -50,7 +50,10 @@ namespace ET
             return $"{this.Process}:{this.Fiber}";
         }
     }
-    
+
+    /// <summary>
+    /// 指向某个进程、某个 Fiber 、某个实体的具体地址 ID
+    /// </summary>
     [MemoryPackable]
     [StructLayout(LayoutKind.Sequential, Pack = 1)]
     public partial struct ActorId
@@ -104,6 +107,7 @@ namespace ET
         public ActorId(int process, int fiber)
         {
             this.Address = new Address(process, fiber);
+            // 默认指向了 NetClient 的 InstanceID
             this.InstanceId = 1;
         }
         

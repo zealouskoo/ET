@@ -2,6 +2,9 @@
 
 namespace ET
 {
+    /// <summary>
+    /// 用于两个纤程间进行通信
+    /// </summary>
     [ComponentOf(typeof(Scene))]
     public class ProcessInnerSender: Entity, IAwake, IDestroy, IUpdate
     {

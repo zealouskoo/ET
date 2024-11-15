@@ -38,13 +38,18 @@ namespace ET.Client
 
         public static async ETTask<long> LoginAsync(this ClientSenderComponent self, string account, string password)
         {
+            // 调用纤程管理器创建一个新的纤程
+            // 这个纤程就是第二个（第一个是MainFiber）纤程， NetClient 纤程，用于和服务器进行通讯
+            // 两个纤程在同一个游戏客户端进程
             self.fiberId = await FiberManager.Instance.Create(SchedulerType.ThreadPool, 0, SceneType.NetClient, "");
+            // 
             self.netClientActorId = new ActorId(self.Fiber().Process, self.fiberId);
 
             Main2NetClient_Login main2NetClientLogin = Main2NetClient_Login.Create();
             main2NetClientLogin.OwnerFiberId = self.Fiber().Id;
             main2NetClientLogin.Account = account;
             main2NetClientLogin.Password = password;
+            // 两个纤程间通信调用 ProcessInnerSender 组件来实现
             NetClient2Main_Login response = await self.Root().GetComponent<ProcessInnerSender>().Call(self.netClientActorId, main2NetClientLogin) as NetClient2Main_Login;
             return response.PlayerId;
         }
