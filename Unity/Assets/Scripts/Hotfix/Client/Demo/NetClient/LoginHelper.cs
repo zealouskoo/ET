@@ -20,12 +20,18 @@ namespace ET.Client
             root.RemoveComponent<ClientSenderComponent>();
             
             ClientSenderComponent clientSenderComponent = root.AddComponent<ClientSenderComponent>();
-            
-            long playerId = await clientSenderComponent.LoginAsync(account, password);
+
+            NetClient2Main_Login response = await clientSenderComponent.LoginAsync(account, password);
+
+            if (response.Error != ErrorCode.ERR_Success) {
+                Log.Error($"Error:{response.Error}.");
+                return;
+            }
+
 
             // 将得到的 playerId 记录到 PlayerComponent 组件上
-            root.GetComponent<PlayerComponent>().MyId = playerId;
-            
+            root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
+
             // 公布登录结束 LoginFinish 事件
             await EventSystem.Instance.PublishAsync(root, new LoginFinish());
         }

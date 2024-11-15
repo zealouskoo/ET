@@ -36,7 +36,7 @@ namespace ET.Client
             self.Dispose();
         }
 
-        public static async ETTask<long> LoginAsync(this ClientSenderComponent self, string account, string password)
+        public static async ETTask<NetClient2Main_Login> LoginAsync(this ClientSenderComponent self, string account, string password)
         {
             // 调用纤程管理器创建一个新的纤程
             // 这个纤程就是第二个（第一个是MainFiber）纤程， NetClient 纤程，用于和服务器进行通讯
@@ -51,7 +51,8 @@ namespace ET.Client
             main2NetClientLogin.Password = password;
             // 两个纤程间通信调用 ProcessInnerSender 组件来实现
             NetClient2Main_Login response = await self.Root().GetComponent<ProcessInnerSender>().Call(self.netClientActorId, main2NetClientLogin) as NetClient2Main_Login;
-            return response.PlayerId;
+            //return response.PlayerId;
+            return response;
         }
 
         public static void Send(this ClientSenderComponent self, IMessage message)
