@@ -13,12 +13,17 @@ namespace ET.Client
 		[EntitySystem]
 		private static void Awake(this UILoginComponent self)
 		{
+			// 获取引用的组件
 			ReferenceCollector rc = self.GetParent<UI>().GameObject.GetComponent<ReferenceCollector>();
+			// 获取登录按钮对象
 			self.loginBtn = rc.Get<GameObject>("LoginBtn");
 			
+			// 根据对象找到 Button 组件为其添加按钮事件
 			self.loginBtn.GetComponent<Button>().onClick.AddListener(()=> { self.OnLogin(); });
+			// 获取用户名称输入对象
 			self.account = rc.Get<GameObject>("Account");
-			self.password = rc.Get<GameObject>("Password");
+            // 获取用户密码输入对象
+            self.password = rc.Get<GameObject>("Password");
 		}
 
 		

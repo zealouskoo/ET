@@ -1,7 +1,7 @@
 namespace ET.Client
 {
     /// <summary>
-    /// 虽说这个类是一个 ET.Client 的类，但是机器人会使用这个类来模拟登录操作，
+    /// 虽说这个类是一个 ET.Client 的类，但是机器人会使用这个类来模拟登录操作，且并没有使用 Unity3D 的类库
     /// 所以需要保证逻辑层代码能在服务器运行
     /// </summary>
     public static class LoginHelper

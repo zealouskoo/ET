@@ -36,15 +36,15 @@
 		//private async ETTask TestAsync(Scene s) {
 		//	Log.Debug("Enter TestAsync");
 		//	await s.GetComponent<TimerComponent>().WaitAsync(3000);
-  //          Log.Debug("Leave TestAsync");
-  //      }
+		//	Log.Debug("Leave TestAsync");
+		//}
 
 		//private async ETTask<int> TestAsync2(Scene s) {
 		//	Log.Debug("Enter TestAsync2");
 		//	await s.GetComponent<TimerComponent>().WaitAsync(3000);
-  //          Log.Debug("Leave TestAsync2");
+		//	Log.Debug("Leave TestAsync2");
 
 		//	return 10;
-  //      }
+		//}
 	}
 }
