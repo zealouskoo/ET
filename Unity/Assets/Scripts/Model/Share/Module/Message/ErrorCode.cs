@@ -14,10 +14,13 @@ namespace ET
         // 110000 - 200000是抛异常的错误
         // 200001以上不抛异常
 
-        public const int ERR_LoginInfoEmpty = 200002;
+        public const int ERR_LoginInfoEmpty = 200001;
+        public const int ERR_LoginPasswordError = 200002;
 
-        public const int ERR_LoginPasswordError = 200003;
+        // public const int ERR_LoginInfoEmpty = 200002;
 
-        //public const int ERR_LoginSuccessed = 200003;
+        // public const int ERR_LoginPasswordError = 200003;
+
+        // public const int ERR_LoginSuccessed = 200003;
     }
 }

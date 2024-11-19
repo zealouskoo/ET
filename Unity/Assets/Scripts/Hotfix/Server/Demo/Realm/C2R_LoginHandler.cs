@@ -5,41 +5,53 @@ using System.Collections.Generic;
 
 namespace ET.Server
 {
+    // 要保证 Realm 这个实体能有操作数据库的能力
+    // 思考 Realm 是在哪里被创建的？
     [MessageSessionHandler(SceneType.Realm)]
     [FriendOfAttribute(typeof(ET.Server.AccountInfo))]
     public class C2R_LoginHandler : MessageSessionHandler<C2R_Login, R2C_Login> {
         protected override async ETTask Run(Session session, C2R_Login request, R2C_Login response) {
-            if (string.IsNullOrEmpty(request.Account) || string.IsNullOrEmpty(request.Password)) {
+            // 检查传入的用户名和密码是否为空
+            // 是的话则返回错误代码
+            // 并关闭 session
+            if (string.IsNullOrEmpty(request.Account) || string.IsNullOrEmpty((request.Password)))
+            {
                 response.Error = ErrorCode.ERR_LoginInfoEmpty;
                 CloseSession(session).Coroutine();
                 return;
             }
+            
+            DBComponent db = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
+            List<AccountInfo> accountInfos = await db.Query<AccountInfo>(accountInfo => accountInfo.Account.Equals(request.Account));
 
-            using(await session.Root().GetComponent<CoroutineLockComponent>().Wait(CoroutineLockType.LoginAccount, request.Account.GetLongHashCode()))
+            if (accountInfos.Count <= 0)
             {
-                // Zone 是区服信息
-                DBComponent dbComponent = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
-                List<AccountInfo> accountList = await dbComponent.Query<AccountInfo>(accountInfo => accountInfo.Account == request.Account);
+                AccountInfosComponent accountInfosComponent = 
+                        session.GetComponent<AccountInfosComponent>() 
+                        ?? session.AddComponent<AccountInfosComponent>();
 
-                if (accountList.Count <= 0) {
-                    AccountInfoComponent accountInfoComponent =
-                    session.GetComponent<AccountInfoComponent>()??session.AddComponent<AccountInfoComponent>();
-
-                    AccountInfo accountInfo = accountInfoComponent.AddChild<AccountInfo>();
-                    accountInfo.Account = request.Account;
-                    accountInfo.Password = request.Password;
-
-                    await dbComponent.Save(accountInfo);
-                } else {
-                    AccountInfo accountInfo = accountList[0];
-
-                    if (!accountInfo.Password.Equals(request.Password)) {
-                        response.Error = ErrorCode.ERR_LoginPasswordError;
-                        CloseSession(session).Coroutine();
-                        return;
-                    }
+                AccountInfo accountInfo = accountInfosComponent.AddComponent<AccountInfo>();
+                accountInfo.Account = request.Account;
+                accountInfo.Password = request.Password;
+                await db.Save(accountInfo);
+            }
+            else
+            {
+                // 只需要检查第一项即可，用户名不允许重复。
+                if (accountInfos[0].Password != request.Password)
+                {
+                    response.Error = ErrorCode.ERR_LoginPasswordError;
+                    CloseSession(session).Coroutine();
+                    return;
                 }
             }
+            
+            // While query AccountInfo, we'll use the field: Account in AccountInfo,
+            // you should add FriendOfAttribute or encounter an error
+            
+            // if there is no match Account(queried infos <= 0), we should create and save it.
+            
+            // if some data are found, we should compare the password if matched.
             
             // 随机分配一个Gate
             StartSceneConfig config = RealmGateAddressHelper.GetGate(session.Zone(), request.Account);
