@@ -21,31 +21,36 @@ namespace ET.Server
                 return;
             }
             
-            DBComponent db = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
-            List<AccountInfo> accountInfos = await db.Query<AccountInfo>(accountInfo => accountInfo.Account.Equals(request.Account));
-
-            if (accountInfos.Count <= 0)
+            // 使用协程锁在使用协程和异步操作的情况下保证账号的唯一性
+            using (await session.Root().GetComponent<CoroutineLockComponent>()
+                           .Wait(CoroutineLockType.LoginAccount, request.Account.GetLongHashCode()))
             {
-                AccountInfosComponent accountInfosComponent = 
-                        session.GetComponent<AccountInfosComponent>() 
-                        ?? session.AddComponent<AccountInfosComponent>();
+                DBComponent db = session.Root().GetComponent<DBManagerComponent>().GetZoneDB(session.Zone());
+                List<AccountInfo> accountInfos = await db.Query<AccountInfo>(accountInfo => accountInfo.Account.Equals(request.Account));
 
-                AccountInfo accountInfo = accountInfosComponent.AddComponent<AccountInfo>();
-                accountInfo.Account = request.Account;
-                accountInfo.Password = request.Password;
-                await db.Save(accountInfo);
-            }
-            else
-            {
-                // 只需要检查第一项即可，用户名不允许重复。
-                if (accountInfos[0].Password != request.Password)
+                if (accountInfos.Count <= 0)
                 {
-                    response.Error = ErrorCode.ERR_LoginPasswordError;
-                    CloseSession(session).Coroutine();
-                    return;
+                    AccountInfosComponent accountInfosComponent =
+                            session.GetComponent<AccountInfosComponent>()
+                            ?? session.AddComponent<AccountInfosComponent>();
+
+                    AccountInfo accountInfo = accountInfosComponent.AddChild<AccountInfo>();
+                    accountInfo.Account = request.Account;
+                    accountInfo.Password = request.Password;
+                    await db.Save(accountInfo);
+                }
+                else
+                {
+                    // 只需要检查第一项即可，用户名不允许重复。
+                    if (accountInfos[0].Password != request.Password)
+                    {
+                        response.Error = ErrorCode.ERR_LoginPasswordError;
+                        CloseSession(session).Coroutine();
+                        return;
+                    }
                 }
             }
-            
+
             // While query AccountInfo, we'll use the field: Account in AccountInfo,
             // you should add FriendOfAttribute or encounter an error
             
