@@ -26,18 +26,22 @@ namespace ET.Server
                 player = playerComponent.AddChild<Player, string>(account);
                 playerComponent.Add(player);
                 PlayerSessionComponent playerSessionComponent = player.AddComponent<PlayerSessionComponent>();
+                // 有了这个组件就成为了一个 Actor，拥有处理网络信息的能力
                 playerSessionComponent.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.GateSession);
+                // 通知 Location 定位服务器，告知当前实体所处的一个具体位置
                 await playerSessionComponent.AddLocation(LocationType.GateSession);
 			
                 player.AddComponent<MailBoxComponent, MailBoxType>(MailBoxType.UnOrderedMessage);
                 await player.AddLocation(LocationType.Player);
 			
+                // player <----> session 互相映射
                 session.AddComponent<SessionPlayerComponent>().Player = player;
                 playerSessionComponent.Session = session;
             }
             else
             {
                 // 判断是否在战斗
+                // 与 LockStep 帧同步有关
                 PlayerRoomComponent playerRoomComponent = player.GetComponent<PlayerRoomComponent>();
                 if (playerRoomComponent.RoomActorId != default)
                 {

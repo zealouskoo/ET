@@ -51,6 +51,7 @@ namespace ET
         // 这个channelId是由CreateAcceptChannelId生成的
         private static void OnAccept(this NetComponent self, long channelId, IPEndPoint ipEndPoint)
         {
+            // 创建 Session 实体
             Session session = self.AddChildWithId<Session, AService>(channelId, self.AService);
             session.RemoteAddress = ipEndPoint;
 

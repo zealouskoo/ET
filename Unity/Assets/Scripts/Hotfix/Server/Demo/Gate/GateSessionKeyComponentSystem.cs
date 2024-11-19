@@ -1,5 +1,9 @@
 ﻿namespace ET.Server
 {
+    
+    /// <summary>
+    /// Gate Session 令牌储存点，添加进来的令版20秒后会失效
+    /// </summary>
     [FriendOf(typeof(GateSessionKeyComponent))]
     public static partial class GateSessionKeyComponentSystem
     {
