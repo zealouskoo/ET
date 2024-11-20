@@ -8,12 +8,18 @@ namespace ET.Server
     {
         protected override async ETTask Run(Scene scene, M2M_UnitTransferRequest request, M2M_UnitTransferResponse response)
         {
+            // Added UnitComponent in FiberInit_Map(Assets/Scripts/Hotfix/Server/LockStep/Map/FiberInit_Map.cs)
             UnitComponent unitComponent = scene.GetComponent<UnitComponent>();
+            // 反序列化 Unit
             Unit unit = MongoHelper.Deserialize<Unit>(request.Unit);
-
+            
+            // 目前的 unit 对象没有父实体，将其交给 unitComponent 托管，
+            // 否则该 unit 会不存在于系统生命周期内，可能造成内存泄露
             unitComponent.AddChild(unit);
             unitComponent.Add(unit);
 
+            // unit 所挂载组件的数据反序列化
+            // 只有实现了 ITransfer 接口的组件会被传递
             foreach (byte[] bytes in request.Entitys)
             {
                 Entity entity = MongoHelper.Deserialize<Entity>(bytes);

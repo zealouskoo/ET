@@ -2,6 +2,11 @@
 
 namespace ET
 {
+    /// <summary>
+    /// 网络信息处理类
+    /// </summary>
+    /// <typeparam name="E">处理信息的实体对象，必须继承自 Entity。</typeparam>
+    /// <typeparam name="Message">需要处理的信息类型，必须继承自 IMessage。</typeparam>
     public abstract class MessageHandler<E, Message>: HandlerObject, IMHandler where E : Entity where Message : class, IMessage
     {
         protected abstract ETTask Run(E entity, Message message);
