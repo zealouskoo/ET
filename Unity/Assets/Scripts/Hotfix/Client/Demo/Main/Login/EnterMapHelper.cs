@@ -9,6 +9,7 @@ namespace ET.Client
         {
             try
             {
+                // 发送消息 C2G_EnterMap
                 G2C_EnterMap g2CEnterMap = await root.GetComponent<ClientSenderComponent>().Call(C2G_EnterMap.Create()) as G2C_EnterMap;
                 
                 // 等待场景切换完成

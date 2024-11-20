@@ -5,6 +5,7 @@ namespace ET.Server
         public static async ETTask<Scene> Create(Entity parent, long id, long instanceId, string name)
         {
             await ETTask.CompletedTask;
+            // 创建一个 Map Scene
             Scene scene = EntitySceneFactory.CreateScene(parent, id, instanceId, SceneType.Map, name);
 
             scene.AddComponent<UnitComponent>();

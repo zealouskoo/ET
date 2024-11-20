@@ -164,9 +164,9 @@ message ObjectQueryResponse // IResponse
 message M2M_UnitTransferRequest // IRequest
 {
 	int32 RpcId = 1;
-	ActorId OldActorId = 2;
-	bytes Unit = 3;
-	repeated bytes Entitys = 4;
+	ActorId OldActorId = 2;						// ActorId 类型是来自于代码中，而不是 proto 代码中
+	bytes Unit = 3;                         // Unit 映射对象实体序列化之后的字节流
+	repeated bytes Entitys = 4;     // Unit 所挂载的组件序列化之后的字节流数组
 }
 
 message M2M_UnitTransferResponse // IResponse

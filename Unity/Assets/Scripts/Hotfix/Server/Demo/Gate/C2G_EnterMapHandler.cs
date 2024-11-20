@@ -1,5 +1,6 @@
 ﻿namespace ET.Server
 {
+	// 消息是直接从客户端连接到 Gate 网关服务器上的，从 ISession 继承过来
 	[MessageSessionHandler(SceneType.Gate)]
 	public class C2G_EnterMapHandler : MessageSessionHandler<C2G_EnterMap, G2C_EnterMap>
 	{
@@ -9,11 +10,13 @@
 
 			// 在Gate上动态创建一个Map Scene，把Unit从DB中加载放进来，然后传送到真正的Map中，这样登陆跟传送的逻辑就完全一样了
 			GateMapComponent gateMapComponent = player.AddComponent<GateMapComponent>();
-			gateMapComponent.Scene = await GateMapFactory.Create(gateMapComponent, player.Id, IdGenerater.Instance.GenerateInstanceId(), "GateMap");
+			gateMapComponent.Scene = 
+					await GateMapFactory.Create(gateMapComponent, player.Id, IdGenerater.Instance.GenerateInstanceId(), "GateMap");
 
 			Scene scene = gateMapComponent.Scene;
 			
 			// 这里可以从DB中加载Unit
+			// 在 ET V8.1 目前没有从数据库加载 
 			Unit unit = UnitFactory.Create(scene, player.Id, UnitType.Player);
 			
 			StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.GetBySceneName(session.Zone(), "Map1");
