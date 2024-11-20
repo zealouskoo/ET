@@ -24,10 +24,13 @@ namespace ET.Client
             NetClient2Main_Login response = await clientSenderComponent.LoginAsync(account, password);
 
             if (response.Error != ErrorCode.ERR_Success) {
-                Log.Error($"Error:{response.Error}.");
+                Log.Error($"请求登录失败,返回错误代码:{response.Error}.");
                 return;
             }
-
+            Log.Debug("请求登录成功！！！");
+            string Token = response.Token;
+            
+            //获取服务器列表
 
             // 将得到的 playerId 记录到 PlayerComponent 组件上
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;

@@ -739,12 +739,21 @@ namespace ET
         [MemoryPackOrder(0)]
         public int RpcId { get; set; }
 
+        /// <summary>
+        /// ActorId 类型是来自于代码中，而不是 proto 代码中
+        /// </summary>
         [MemoryPackOrder(1)]
         public ActorId OldActorId { get; set; }
 
+        /// <summary>
+        /// Unit 映射对象实体序列化之后的字节流
+        /// </summary>
         [MemoryPackOrder(2)]
         public byte[] Unit { get; set; }
 
+        /// <summary>
+        /// Unit 所挂载的组件序列化之后的字节流数组
+        /// </summary>
         [MemoryPackOrder(3)]
         public List<byte[]> Entitys { get; set; } = new();
 

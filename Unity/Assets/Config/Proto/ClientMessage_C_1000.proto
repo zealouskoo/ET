@@ -17,5 +17,6 @@ message NetClient2Main_Login // IResponse
 	int32 Error = 2;
 	string Message = 3;
 
-	int64 PlayerId = 4;
+	int64 PlayerId = 4;	
+	string Token = 5; 	// 登录令牌
 }
