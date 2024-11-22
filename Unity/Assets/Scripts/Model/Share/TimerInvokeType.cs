@@ -14,6 +14,9 @@
         public const int AITimer = 202;
         public const int SessionAcceptTimeout = 203;
         
+        
+        public const long AccountSessionCheckoutTime = 204;
+        
         public const int RoomUpdate = 301;
     }
 }

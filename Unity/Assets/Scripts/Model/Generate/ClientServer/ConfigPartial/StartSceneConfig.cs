@@ -23,6 +23,8 @@ namespace ET
         public StartSceneConfig Match;
         
         public StartSceneConfig Benchmark;
+
+        public StartSceneConfig LoginCenterConfig;
         
         public List<StartSceneConfig> GetByProcess(int process)
         {
@@ -34,6 +36,9 @@ namespace ET
             return this.ClientScenesByName[zone][name];
         }
 
+        /// <summary>
+        /// 配置被反序列化读取到程序之后，会执行此程序
+        /// </summary>
         public override void EndInit()
         {
             foreach (StartSceneConfig startSceneConfig in this.GetAll().Values)
@@ -68,6 +73,9 @@ namespace ET
                         break;
                     case SceneType.BenchmarkServer:
                         this.Benchmark = startSceneConfig;
+                        break;
+                    case SceneType.LoginCenter:
+                        this.LoginCenterConfig = startSceneConfig;
                         break;
                 }
             }
