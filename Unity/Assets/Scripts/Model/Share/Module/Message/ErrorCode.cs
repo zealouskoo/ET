@@ -20,6 +20,7 @@ namespace ET
         public const int ERR_LoginPasswordError = 200003;
         public const int ERR_AccountNameFormError = 200004;
         public const int ERR_PasswordFormError = 200005;
+        public const int ERR_AccountBanned = 200006;
 
         // public const int ERR_LoginInfoEmpty = 200002;
 

@@ -15,7 +15,7 @@ namespace ET.Server
             root.AddComponent<MessageSender>();
             StartSceneConfig startSceneConfig = StartSceneConfigCategory.Instance.Get(root.Fiber.Id);
             root.AddComponent<NetComponent, IPEndPoint, NetworkProtocol>(startSceneConfig.InnerIPPort, NetworkProtocol.UDP);
-            root.AddComponent<DBManagerComponent>();
+            root.AddComponent<DBManagerComponent>(); //Realm 场景拥有操作服务器的能力
             await ETTask.CompletedTask;
         }
     }
