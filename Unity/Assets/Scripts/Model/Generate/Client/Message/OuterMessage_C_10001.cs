@@ -1162,6 +1162,40 @@ namespace ET
         }
     }
 
+    // All to client
+    [MemoryPackable]
+    [Message(OuterMessage.A2C_Disconnect)]
+    public partial class A2C_Disconnect : MessageObject, ISessionMessage
+    {
+        public static A2C_Disconnect Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(A2C_Disconnect), isFromPool) as A2C_Disconnect;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;
@@ -1200,5 +1234,6 @@ namespace ET
         public const ushort G2C_Benchmark = 10035;
         public const ushort C2R_LoginAccount = 10036;
         public const ushort R2C_LoginAccount = 10037;
+        public const ushort A2C_Disconnect = 10038;
     }
 }

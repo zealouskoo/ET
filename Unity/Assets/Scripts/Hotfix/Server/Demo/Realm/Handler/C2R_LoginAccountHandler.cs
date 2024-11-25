@@ -77,24 +77,53 @@ namespace ET.Server.Handler
                         account.AccountType = (int)AccountType.General;
                         await db.Save(account);
                     }
-
-                    R2L_LoginAccountRequest r2LLoginAccount = R2L_LoginAccountRequest.Create();
                     
                     /*
                      * 1. 声明一条网络信息（R2L_LoginAccountRequest），用于自 Realm 向 LoginCenter 请求登录信息
                      *  考虑下 R2L_LoginAccountRequest 这条信息会申明在哪个 proto 文件内。
-                     * 2. 使用 StartSceneConfigCategory 获取 LoginCenterConfig，在 StartSceneConfig 内
-                     * 3. 使用 MessageSender 组件向 LoginCenter 服务器发送 r2LLoginAccount，
-                     *  发送的 ActorId 在loginCenterConfig中，并回传 L2R_LoginAccountRequest 消息
-                     * 4. 检查下回传的消息是否为 ERR_Success，不是的话就返回错误代码，结束 session 并终止后续的逻辑
-                     *  任何可能造成内存泄露的情况都要处理，本例中 account 本不需要手动释放，但是养成好习惯还是写上释放语句。
-                     * 5. 编写 AccountSessionComponent 组件，并在 Realm 的实体上添加此组件
-                     * 6. 检查之前是否有其他的同名登录过了，
-                     *    假如玩家 A 先登录之后，玩家 B 也用同样用户名和密码登录，业务流程应该是在 B 登录时，
-                     *    通知 A 玩家有其他玩家在其他的地方登录了他的账号，并将 A 的连接关闭。
-                     * 7. 之后用 AccountSessionComponent 记录下玩家的用户名和 Session
-                     * 8. 编写 AccountCheckOutTimeComponent 组件，并添加到 session 上进行管理
+                     * Realm to LoginCenter 是服务器内部的消息，所以在 InnerMessage.proto 中
                      */
+                    R2L_LoginAccountRequest r2LLoginAccount = R2L_LoginAccountRequest.Create();
+                     /* 2. 使用 StartSceneConfigCategory 获取 LoginCenterConfig，在 StartSceneConfig 内 */
+                     StartSceneConfig loginCenterConfig = StartSceneConfigCategory.Instance.LoginCenterConfig;
+                     
+                     /* 3. 使用 MessageSender 组件向 LoginCenter 服务器发送 r2LLoginAccount，
+                      *  发送的 ActorId 在loginCenterConfig中，并回传 L2R_LoginAccountRequest 消息 */
+                      L2R_LoginAccountRequest l2RLoginAccount = 
+                              await session.Fiber().Root.GetComponent<MessageSender>().Call(loginCenterConfig.ActorId, r2LLoginAccount) 
+                                      as L2R_LoginAccountRequest;
+                     
+                      /* 4. 检查下回传的消息是否为 ERR_Success，不是的话就返回错误代码，结束 session 并终止后续的逻辑
+                      *  任何可能造成内存泄露的情况都要处理，本例中 account 本不需要手动释放，但是养成好习惯还是写上释放语句。*/
+                      if (!l2RLoginAccount.Error.Equals(ErrorCode.ERR_Success))
+                      {
+                          response.Error = l2RLoginAccount.Error;
+                          session.Disconnect().Coroutine();
+                          account?.Dispose();
+                          return;
+                      }
+                      /* 5. 编写 AccountSessionComponent 组件，并在 Realm 的实体上添加此组件 
+                      
+                      * 6. 检查之前是否有其他的同名登录过了，AccountSessionComponent 里有没有存储过同名的 Session
+                      *    假如玩家 A 先登录之后，玩家 B 也用同样用户名和密码登录，业务流程应该是在 B 登录时，
+                      *    通知 A 玩家有其他玩家在其他的地方登录了他的账号，并将 A 的连接关闭。 */
+                      Session otherSession = session.Root().GetComponent<AccountSessionComponent>().Get(request.AccountName);
+                      otherSession?.Send(A2C_Disconnect.Create());
+                      otherSession?.Disconnect().Coroutine();
+                      /* 7. 之后用 AccountSessionComponent 记录下玩家的用户名和 Session */
+                      session.Root().GetComponent<AccountSessionComponent>().Add(request.AccountName, session);
+                      /* 8. 编写 AccountCheckOutTimeComponent 组件，并添加到 session 上进行管理 */
+                      session.AddComponent<AccountCheckOutTimeComponent, string>(request.AccountName);
+                      /* 9. 生成 Token 字符串，服务器当前时间 + 随机数字 */
+                      string Token = TimeInfo.Instance.ServerNow().ToString() + RandomGenerator.RandomNumber(int.MinValue, int.MaxValue);
+                      /* 10. 删除之前 TokenComponent 组件内的 AccountName 值（如果有的话） */
+                      session.Root().GetComponent<TokenComponent>().Remove(request.AccountName);
+                      /* 11. 把刚刚生成的 Token 值写入到 TokenComponent 组件中 */
+                      session.Root().GetComponent<TokenComponent>().Add(request.AccountName, Token);
+                      /* 12. 把 Token 写入到返回信息中 */
+                      response.Token = Token;
+                      /* 13. 记得释放 account */
+                      account?.Dispose();
                 }
             }
 

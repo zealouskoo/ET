@@ -251,6 +251,8 @@ message R2C_LoginAccount // ISessionResponse
 	string Token = 4;	// 登录令牌
 }
 
+
+// All to client
 message A2C_Disconnect // ISessionMessage
 {
 	int32 RpcId = 1;
