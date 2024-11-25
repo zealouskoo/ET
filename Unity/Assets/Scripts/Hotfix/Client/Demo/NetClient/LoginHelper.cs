@@ -21,6 +21,7 @@ namespace ET.Client
             
             ClientSenderComponent clientSenderComponent = root.AddComponent<ClientSenderComponent>();
 
+            // 此时的 session 还没有建立，无法直接使用 ClientSenderComponent 的 call 命令来发送
             NetClient2Main_Login response = await clientSenderComponent.LoginAsync(account, password);
 
             if (response.Error != ErrorCode.ERR_Success) {
@@ -30,8 +31,20 @@ namespace ET.Client
             Log.Debug("请求登录成功！！！");
             string Token = response.Token;
             
-            //获取服务器列表
+            // 获取服务器列表
+            C2R_GetServerInfos c2RGetServerInfos = C2R_GetServerInfos.Create();
+            c2RGetServerInfos.Account = account;
+            c2RGetServerInfos.Token = Token;
+            R2C_GetServerInfos r2CGetServerInfos = await clientSenderComponent.Call(c2RGetServerInfos) as R2C_GetServerInfos;
 
+            if (r2CGetServerInfos.Error != ErrorCode.ERR_Success)
+            {
+                Log.Error("请求网关服务器列表错误！");
+                return;
+            }
+            
+            // 获取区服角色列表
+            
             // 将得到的 playerId 记录到 PlayerComponent 组件上
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
 

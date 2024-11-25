@@ -18,6 +18,7 @@ namespace ET.Server
             
             root.AddComponent<DBManagerComponent>(); //Realm 场景拥有操作服务器的能力
             root.AddComponent<AccountSessionComponent>(); //Realm 场景实体可以保存 Session 和 Account 的对应
+            root.AddComponent<ServerInfosManagerComponent>();
             await ETTask.CompletedTask;
         }
     }
