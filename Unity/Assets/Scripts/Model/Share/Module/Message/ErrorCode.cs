@@ -22,6 +22,11 @@ namespace ET
         public const int ERR_PasswordFormError = 200005;
         public const int ERR_AccountBanned = 200006;
         public const int ERR_TokenError = 200007;
+        public const int ERR_CreateRoleRepeatedly = 200008;
+        public const int ERR_RoleNameEmpty = 200009;
+        public const int ERR_RoleDuplicate = 200010;
+        public const int ERR_DeleteRepeatedly = 200011;
+        public const int ERR_RoleNotFound = 200012;
 
         // public const int ERR_LoginInfoEmpty = 200002;
 

@@ -310,19 +310,38 @@ message R2C_GetRoleInfos // ISessionResponse
 	repeated RoleInfosProto RoleInfosList = 1;
 }
 
-// // ResponseType R2C_CreateRole
-// message C2R_CreateRole // ISessionRequest
-// {
-// 	int32 RpcId = 90;
-// 	string  Token = 1; 
-// 	string  Account = 2;
-// 	int32 ServerId = 3;
-// 	string Name = 4;
-// }
+// ResponseType R2C_CreateRole
+message C2R_CreateRole // ISessionRequest
+{
+	int32 RpcId = 90;
+	string  Token = 1; 
+	string  Account = 2;
+	string Name = 3;
+	int32 ServerId = 4;
+}
 
-// message R2C_CreateRole // ISessionResponse
-// {
-// 	int32 RpcId = 90;
-// 	int32 Error = 91;
-// 	string Message = 92;
-// }
+message R2C_CreateRole // ISessionResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+	RoleInfosProto RoleInfos = 1;
+}
+
+// ResponseType R2C_DeleteRole
+message C2R_DeleteRole // ISessionRequest
+{
+	int32 RpcId = 90;
+	string Token = 1;
+	string Account = 2;
+	int RoleInfosId = 3;
+	int32 ServerId = 4;
+}
+
+message R2C_DeleteRole // ISessionResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+	long DeletedRoleInfosId = 1;
+}

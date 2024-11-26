@@ -13,6 +13,7 @@ namespace ET
 
         public const int LoginAccount = 8;
         public const int CreateRole = 9;
+        public const int DeleteRole = 10;
 
         public const int Max = 100; // 这个必须最大
     }

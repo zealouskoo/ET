@@ -51,7 +51,7 @@ namespace ET.Client
             c2RGetRoleInfos.Account = account;
             c2RGetRoleInfos.Token = Token;
             c2RGetRoleInfos.ServerId = serverInfoProto.Id;
-            R2C_GetRoleInfos r2C_GetRoleInfos = await clientSenderComponent.Call(c2RGetRoleInfos) as R2C_GetRoleInfos;
+            R2C_GetRoleInfos r2CGetRoleInfos = await clientSenderComponent.Call(c2RGetRoleInfos) as R2C_GetRoleInfos;
 
             if (r2CGetServerInfos.Error != ErrorCode.ERR_Success)
             {
@@ -60,10 +60,28 @@ namespace ET.Client
             }
 
             RoleInfosProto roleInfosProto = default;
-            if (r2C_GetRoleInfos.RoleInfosList.Count <= 0)
+            if (r2CGetRoleInfos.RoleInfosList.Count <= 0)
             {
                 // 没有角色
-                // C2R_CreateRole
+                C2R_CreateRole c2RCreateRole = C2R_CreateRole.Create();
+                c2RCreateRole.Account = account;
+                c2RCreateRole.Name = account;
+                c2RCreateRole.Token = Token;
+                c2RCreateRole.ServerId = serverInfoProto.Id;
+                
+                R2C_CreateRole r2CCreateRole = await clientSenderComponent.Call(c2RCreateRole) as R2C_CreateRole;
+
+                if (r2CCreateRole.Error != ErrorCode.ERR_Success)
+                {
+                    Log.Debug($@"在【{serverInfoProto.ServerName}】创建角色失败！");
+                    return;
+                }
+
+                roleInfosProto = r2CCreateRole.RoleInfos;
+            }
+            else
+            {
+                roleInfosProto = r2CGetRoleInfos.RoleInfosList[0];
             }
             
             // 将得到的 playerId 记录到 PlayerComponent 组件上
