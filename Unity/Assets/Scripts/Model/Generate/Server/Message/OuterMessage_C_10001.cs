@@ -1313,10 +1313,22 @@ namespace ET
         public int Id { get; set; }
 
         [MemoryPackOrder(1)]
-        public int Status { get; set; }
+        public string RoleName { get; set; }
 
         [MemoryPackOrder(2)]
-        public string RoleName { get; set; }
+        public int State { get; set; }
+
+        [MemoryPackOrder(3)]
+        public string Account { get; set; }
+
+        [MemoryPackOrder(4)]
+        public long LastLoginTime { get; set; }
+
+        [MemoryPackOrder(5)]
+        public long CreateTime { get; set; }
+
+        [MemoryPackOrder(6)]
+        public int ServerId { get; set; }
 
         public override void Dispose()
         {
@@ -1326,8 +1338,12 @@ namespace ET
             }
 
             this.Id = default;
-            this.Status = default;
             this.RoleName = default;
+            this.State = default;
+            this.Account = default;
+            this.LastLoginTime = default;
+            this.CreateTime = default;
+            this.ServerId = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1352,6 +1368,9 @@ namespace ET
         [MemoryPackOrder(1)]
         public string Account { get; set; }
 
+        [MemoryPackOrder(2)]
+        public int ServerId { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -1362,6 +1381,7 @@ namespace ET
             this.RpcId = default;
             this.Token = default;
             this.Account = default;
+            this.ServerId = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -1404,6 +1424,20 @@ namespace ET
         }
     }
 
+    // message C2R_CreateRole // ISessionRequest
+    // {
+    //     int32 RpcId = 90;
+    //     string  Token = 1;
+    //     string  Account = 2;
+    //     int32 ServerId = 3;
+    //     string Name = 4;
+    // }
+    // message R2C_CreateRole // ISessionResponse
+    // {
+    //     int32 RpcId = 90;
+    //     int32 Error = 91;
+    //     string Message = 92;
+    // }
     public static class OuterMessage
     {
         public const ushort HttpGetRouterResponse = 10002;

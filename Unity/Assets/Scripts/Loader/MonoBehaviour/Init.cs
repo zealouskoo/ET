@@ -15,7 +15,6 @@ namespace ET
 		private void Start()
 		{
 			// this is an async function.
-			// TODO:learn some async syntaxes.
 			this.StartAsync().Coroutine();
 		}
 		

@@ -285,8 +285,12 @@ message R2C_GetServerInfos // ISessionResponse
 message RoleInfosProto
 {
 	int32 Id = 1;
-	int32 Status = 2;
-	string RoleName = 3;
+	string RoleName = 2;
+	int32 State = 3;
+	string Account = 4;
+	int64 LastLoginTime = 5;
+	int64 CreateTime = 6;
+	int32 ServerId = 7;
 }
 
 // ResponseType R2C_GetRoleInfos
@@ -295,6 +299,7 @@ message C2R_GetRoleInfos // ISessionRequest
 	int32 RpcId = 90;
 	string  Token = 1; 
 	string  Account = 2;
+	int32 ServerId = 3;
 }
 
 message R2C_GetRoleInfos // ISessionResponse
@@ -304,3 +309,20 @@ message R2C_GetRoleInfos // ISessionResponse
 	string Message = 92;
 	repeated RoleInfosProto RoleInfosList = 1;
 }
+
+// // ResponseType R2C_CreateRole
+// message C2R_CreateRole // ISessionRequest
+// {
+// 	int32 RpcId = 90;
+// 	string  Token = 1; 
+// 	string  Account = 2;
+// 	int32 ServerId = 3;
+// 	string Name = 4;
+// }
+
+// message R2C_CreateRole // ISessionResponse
+// {
+// 	int32 RpcId = 90;
+// 	int32 Error = 91;
+// 	string Message = 92;
+// }

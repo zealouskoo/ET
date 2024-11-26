@@ -42,8 +42,29 @@ namespace ET.Client
                 Log.Error("请求网关服务器列表错误！");
                 return;
             }
+
+            ServerInfoProto serverInfoProto = r2CGetServerInfos.ServerInfosList[0];
+            Log.Debug($@"请求服务器列表成功，区服名称: {serverInfoProto.ServerName}, 区服ID：{serverInfoProto.Id}");
             
             // 获取区服角色列表
+            C2R_GetRoleInfos c2RGetRoleInfos = C2R_GetRoleInfos.Create();
+            c2RGetRoleInfos.Account = account;
+            c2RGetRoleInfos.Token = Token;
+            c2RGetRoleInfos.ServerId = serverInfoProto.Id;
+            R2C_GetRoleInfos r2C_GetRoleInfos = await clientSenderComponent.Call(c2RGetRoleInfos) as R2C_GetRoleInfos;
+
+            if (r2CGetServerInfos.Error != ErrorCode.ERR_Success)
+            {
+                Log.Error("请求角色列表错误！");
+                return;
+            }
+
+            RoleInfosProto roleInfosProto = default;
+            if (r2C_GetRoleInfos.RoleInfosList.Count <= 0)
+            {
+                // 没有角色
+                // C2R_CreateRole
+            }
             
             // 将得到的 playerId 记录到 PlayerComponent 组件上
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
