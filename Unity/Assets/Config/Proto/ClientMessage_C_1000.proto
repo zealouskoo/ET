@@ -20,3 +20,16 @@ message NetClient2Main_Login // IResponse
 	int64 PlayerId = 4;	
 	string Token = 5; 	// 登录令牌
 }
+
+// ResponseType Main2NetClient_LoginGame
+message NetClient2Main_LoginGame // IRequest
+{
+	int32 RpcId = 1;
+}
+
+message Main2NetClient_LoginGame // IResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+}

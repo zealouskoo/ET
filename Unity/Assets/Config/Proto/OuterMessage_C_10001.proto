@@ -345,3 +345,22 @@ message R2C_DeleteRole // ISessionResponse
 	string Message = 92;
 	long DeletedRoleInfosId = 1;
 }
+
+// ResponseType R2C_GetRealmKey
+message C2R_GetRealmKey // ISessionRequest
+{
+	int32 RpcId = 90;
+	string Token = 1;
+	string Account = 2;
+	int32 ServerId = 3;
+}
+
+message R2C_GetRealmKey // ISessionResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+	string Address = 1;
+	int64 Key = 2;
+	int64 GateId = 3;
+}

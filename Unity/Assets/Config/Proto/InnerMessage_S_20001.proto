@@ -176,7 +176,7 @@ message M2M_UnitTransferResponse // IResponse
 	string Message = 3;
 }
 
-ResponseType L2R_LoginAccountRequest
+// ResponseType L2R_LoginAccountRequest
 message R2L_LoginAccountRequest // IRequest
 {
 	int32 RpcId = 1;
@@ -184,6 +184,21 @@ message R2L_LoginAccountRequest // IRequest
 }
 
 message L2R_LoginAccountRequest // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType G2L_DisconnectGateUnit
+message L2G_DisconnectGateUnit // IRequest
+{
+	int32 RpcId = 1;
+	string AccountName = 2;
+}
+
+
+message G2L_DisconnectGateUnit // IResponse
 {
 	int32 RpcId = 1;
 	int32 Error = 2;

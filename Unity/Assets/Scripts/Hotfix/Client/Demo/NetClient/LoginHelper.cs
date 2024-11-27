@@ -1,3 +1,5 @@
+using ET.Server;
+
 namespace ET.Client
 {
     /// <summary>
@@ -83,6 +85,21 @@ namespace ET.Client
             {
                 roleInfosProto = r2CGetRoleInfos.RoleInfosList[0];
             }
+            
+            // 请求获取 RealmKey
+            C2R_GetRealmKey c2RGetRealmKey = C2R_GetRealmKey.Create();
+            c2RGetRealmKey.Account = account;
+            c2RGetRealmKey.Token = Token;
+            c2RGetRealmKey.ServerId = serverInfoProto.Id;
+            R2C_GetRealmKey r2CGetRealmKey = await clientSenderComponent.Call(c2RGetRealmKey) as R2C_GetRealmKey;
+
+            if (r2CGetRealmKey.Error.Equals((int)ErrorCode.ERR_Success))
+            {
+                Log.Error("获取 Realm Key 出错！");
+                return;
+            }
+            
+            
             
             // 将得到的 playerId 记录到 PlayerComponent 组件上
             root.GetComponent<PlayerComponent>().MyId = response.PlayerId;
