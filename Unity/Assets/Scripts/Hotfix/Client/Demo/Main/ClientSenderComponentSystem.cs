@@ -55,6 +55,18 @@ namespace ET.Client
             return response;
         }
 
+        public static async ETTask<NetClient2Main_LoginGame> LoginGameAsync(this ClientSenderComponent self, string account, long key, long roleId, string address)
+        {
+            Main2NetClient_LoginGame main2NetClientLoginGame = Main2NetClient_LoginGame.Create();
+            main2NetClientLoginGame.Account = account;
+            main2NetClientLoginGame.RealmKey = key;
+            main2NetClientLoginGame.RoleId = roleId;
+            main2NetClientLoginGame.GateAddress = address;
+            
+            NetClient2Main_LoginGame netClient2MainLoginGame = await self.Root().GetComponent<ProcessInnerSender>().Call(self.netClientActorId, main2NetClientLoginGame) as NetClient2Main_LoginGame;
+            return netClient2MainLoginGame;
+        }
+
         public static void Send(this ClientSenderComponent self, IMessage message)
         {
             A2NetClient_Message a2NetClientMessage = A2NetClient_Message.Create();

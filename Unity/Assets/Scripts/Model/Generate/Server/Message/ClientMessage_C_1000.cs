@@ -3,6 +3,7 @@ using System.Collections.Generic;
 
 namespace ET
 {
+    // 客户端内部的两个纤程间通信消息在此声明
     [MemoryPackable]
     [Message(ClientMessage.Main2NetClient_Login)]
     [ResponseType(nameof(NetClient2Main_Login))]
@@ -92,17 +93,29 @@ namespace ET
     }
 
     [MemoryPackable]
-    [Message(ClientMessage.NetClient2Main_LoginGame)]
-    [ResponseType(nameof(Main2NetClient_LoginGame))]
-    public partial class NetClient2Main_LoginGame : MessageObject, IRequest
+    [Message(ClientMessage.Main2NetClient_LoginGame)]
+    [ResponseType(nameof(NetClient2Main_LoginGame))]
+    public partial class Main2NetClient_LoginGame : MessageObject, IRequest
     {
-        public static NetClient2Main_LoginGame Create(bool isFromPool = false)
+        public static Main2NetClient_LoginGame Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(NetClient2Main_LoginGame), isFromPool) as NetClient2Main_LoginGame;
+            return ObjectPool.Instance.Fetch(typeof(Main2NetClient_LoginGame), isFromPool) as Main2NetClient_LoginGame;
         }
 
-        [MemoryPackOrder(0)]
+        [MemoryPackOrder(89)]
         public int RpcId { get; set; }
+
+        [MemoryPackOrder(0)]
+        public long RealmKey { get; set; }
+
+        [MemoryPackOrder(1)]
+        public string Account { get; set; }
+
+        [MemoryPackOrder(2)]
+        public long RoleId { get; set; }
+
+        [MemoryPackOrder(3)]
+        public string GateAddress { get; set; }
 
         public override void Dispose()
         {
@@ -112,18 +125,22 @@ namespace ET
             }
 
             this.RpcId = default;
+            this.RealmKey = default;
+            this.Account = default;
+            this.RoleId = default;
+            this.GateAddress = default;
 
             ObjectPool.Instance.Recycle(this);
         }
     }
 
     [MemoryPackable]
-    [Message(ClientMessage.Main2NetClient_LoginGame)]
-    public partial class Main2NetClient_LoginGame : MessageObject, IResponse
+    [Message(ClientMessage.NetClient2Main_LoginGame)]
+    public partial class NetClient2Main_LoginGame : MessageObject, IResponse
     {
-        public static Main2NetClient_LoginGame Create(bool isFromPool = false)
+        public static NetClient2Main_LoginGame Create(bool isFromPool = false)
         {
-            return ObjectPool.Instance.Fetch(typeof(Main2NetClient_LoginGame), isFromPool) as Main2NetClient_LoginGame;
+            return ObjectPool.Instance.Fetch(typeof(NetClient2Main_LoginGame), isFromPool) as NetClient2Main_LoginGame;
         }
 
         [MemoryPackOrder(89)]
@@ -135,6 +152,9 @@ namespace ET
         [MemoryPackOrder(91)]
         public string Message { get; set; }
 
+        [MemoryPackOrder(0)]
+        public long PlayerId { get; set; }
+
         public override void Dispose()
         {
             if (!this.IsFromPool)
@@ -145,6 +165,7 @@ namespace ET
             this.RpcId = default;
             this.Error = default;
             this.Message = default;
+            this.PlayerId = default;
 
             ObjectPool.Instance.Recycle(this);
         }
@@ -154,7 +175,7 @@ namespace ET
     {
         public const ushort Main2NetClient_Login = 1001;
         public const ushort NetClient2Main_Login = 1002;
-        public const ushort NetClient2Main_LoginGame = 1003;
-        public const ushort Main2NetClient_LoginGame = 1004;
+        public const ushort Main2NetClient_LoginGame = 1003;
+        public const ushort NetClient2Main_LoginGame = 1004;
     }
 }

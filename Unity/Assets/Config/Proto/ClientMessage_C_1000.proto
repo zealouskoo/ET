@@ -1,3 +1,4 @@
+// 客户端内部的两个纤程间通信消息在此声明
 syntax = "proto3";
 
 package ET;
@@ -21,15 +22,21 @@ message NetClient2Main_Login // IResponse
 	string Token = 5; 	// 登录令牌
 }
 
-// ResponseType Main2NetClient_LoginGame
-message NetClient2Main_LoginGame // IRequest
+// ResponseType NetClient2Main_LoginGame
+message Main2NetClient_LoginGame // IRequest
 {
-	int32 RpcId = 1;
+	int32 RpcId = 90;
+	int64 RealmKey = 1;
+	string Account = 2;
+	int64 RoleId = 3;
+	string GateAddress = 4;
 }
 
-message Main2NetClient_LoginGame // IResponse
+message NetClient2Main_LoginGame // IResponse
 {
 	int32 RpcId = 90;
 	int32 Error = 91;
 	string Message = 92;
+
+	int64 PlayerId = 1;
 }

@@ -364,3 +364,37 @@ message R2C_GetRealmKey // ISessionResponse
 	int64 Key = 2;
 	int64 GateId = 3;
 }
+
+// ResponseType G2C_LoginGameGate
+message C2G_LoginGameGate // ISessionRequest
+{
+	int32 RpcId = 90;
+	int64 Key = 1;
+	string AccountName = 2;
+	int64 RoleId = 3;
+}
+
+message G2C_LoginGameGate // ISessionResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+
+	int64 PlayerId = 1;
+}
+
+// ResponseType G2C_EnterGame
+message C2G_EnterGame // ISessionRequest
+{
+	int32 RpcId = 90;
+
+}
+
+message G2C_EnterGame // ISessionResponse
+{
+	int32 RpcId = 90;
+	int32 Error = 91;
+	string Message = 92;
+
+	int64 MyUnitId = 1;
+}

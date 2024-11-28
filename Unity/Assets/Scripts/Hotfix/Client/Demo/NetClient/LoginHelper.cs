@@ -95,10 +95,9 @@ namespace ET.Client
 
             if (r2CGetRealmKey.Error.Equals((int)ErrorCode.ERR_Success))
             {
-                Log.Error("获取 Realm Key 出错！");
+                Log.Error("获取 RealmKey 出错！");
                 return;
             }
-            
             
             
             // 将得到的 playerId 记录到 PlayerComponent 组件上
