@@ -16,7 +16,8 @@
         
         
         public const long AccountSessionCheckoutTime = 204;
-        
+        public const int PlayerOfflineTimeout = 205;
+
         public const int RoomUpdate = 301;
     }
 }

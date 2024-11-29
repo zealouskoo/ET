@@ -29,6 +29,8 @@ namespace ET
         public const int ERR_RoleNotFound = 200012;
         public const int ERR_GetRealmKeyRepeatedly = 200013;
         public const int ERR_LoginGateRepeatedly = 200014;
+        public const int ERR_ConnectGateKeyError = 200015;
+        public const int ERR_GateSessionNotSync = 200016;
 
         // public const int ERR_LoginInfoEmpty = 200002;
 

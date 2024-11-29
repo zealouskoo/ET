@@ -22,5 +22,9 @@ namespace ET.Server
             
             self.Dispose();
         }
+
+        public static async ETTask KickPlayer(Player player)
+        {
+        }
     }
 }
