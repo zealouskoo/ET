@@ -234,3 +234,31 @@ message L2G_DeleteLoginRecord // IResponse
 	int32 Error = 2;
 	string Message = 3;
 }
+
+// ResponseType L2G_RemoveLoginRecord
+message G2L_RemoveLoginReocrd // IRequest
+{
+	int32 RpcId = 90;
+	string AccountName = 1;
+	int32 ServerId = 2;
+}
+
+message L2G_RemoveLoginRecord // IResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}
+
+// ResponseType M2G_RequestExitGame
+message G2M_RequestExitGame // ISessionRequest
+{
+	int32 RpcId = 1;
+}
+
+message M2G_RequestExitGame // ISessionResponse
+{
+	int32 RpcId = 1;
+	int32 Error = 2;
+	string Message = 3;
+}

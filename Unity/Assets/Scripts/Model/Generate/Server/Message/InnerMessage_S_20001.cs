@@ -1066,6 +1066,132 @@ namespace ET
         }
     }
 
+    [MemoryPackable]
+    [Message(InnerMessage.G2L_RemoveLoginReocrd)]
+    [ResponseType(nameof(L2G_RemoveLoginRecord))]
+    public partial class G2L_RemoveLoginReocrd : MessageObject, IRequest
+    {
+        public static G2L_RemoveLoginReocrd Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2L_RemoveLoginReocrd), isFromPool) as G2L_RemoveLoginReocrd;
+        }
+
+        [MemoryPackOrder(89)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(0)]
+        public string AccountName { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int ServerId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.AccountName = default;
+            this.ServerId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.L2G_RemoveLoginRecord)]
+    public partial class L2G_RemoveLoginRecord : MessageObject, IResponse
+    {
+        public static L2G_RemoveLoginRecord Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(L2G_RemoveLoginRecord), isFromPool) as L2G_RemoveLoginRecord;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.G2M_RequestExitGame)]
+    [ResponseType(nameof(M2G_RequestExitGame))]
+    public partial class G2M_RequestExitGame : MessageObject, ISessionRequest
+    {
+        public static G2M_RequestExitGame Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(G2M_RequestExitGame), isFromPool) as G2M_RequestExitGame;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
+    [MemoryPackable]
+    [Message(InnerMessage.M2G_RequestExitGame)]
+    public partial class M2G_RequestExitGame : MessageObject, ISessionResponse
+    {
+        public static M2G_RequestExitGame Create(bool isFromPool = false)
+        {
+            return ObjectPool.Instance.Fetch(typeof(M2G_RequestExitGame), isFromPool) as M2G_RequestExitGame;
+        }
+
+        [MemoryPackOrder(0)]
+        public int RpcId { get; set; }
+
+        [MemoryPackOrder(1)]
+        public int Error { get; set; }
+
+        [MemoryPackOrder(2)]
+        public string Message { get; set; }
+
+        public override void Dispose()
+        {
+            if (!this.IsFromPool)
+            {
+                return;
+            }
+
+            this.RpcId = default;
+            this.Error = default;
+            this.Message = default;
+
+            ObjectPool.Instance.Recycle(this);
+        }
+    }
+
     public static class InnerMessage
     {
         public const ushort ObjectQueryRequest = 20002;
@@ -1099,5 +1225,9 @@ namespace ET
         public const ushort L2G_AddLoginRecord = 20030;
         public const ushort G2L_DeleteLoginRecord = 20031;
         public const ushort L2G_DeleteLoginRecord = 20032;
+        public const ushort G2L_RemoveLoginReocrd = 20033;
+        public const ushort L2G_RemoveLoginRecord = 20034;
+        public const ushort G2M_RequestExitGame = 20035;
+        public const ushort M2G_RequestExitGame = 20036;
     }
 }
