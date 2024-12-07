@@ -203,8 +203,15 @@
         "cn.etetet.excel": "2.0.0",
         "cn.etetet.proto": "2.0.1",
         "cn.etetet.ai": "2.0.1",
-        "cn.etetet.sourcegenerator": "0.0.7"
+        "cn.etetet.sourcegenerator": "0.0.7",
+        "cn.etetet.test": "0.0.0"
       }
+    },
+    "cn.etetet.test": {
+      "version": "file:cn.etetet.test",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
     },
     "cn.etetet.ui": {
       "version": "file:cn.etetet.ui",
